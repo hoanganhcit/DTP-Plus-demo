@@ -151,19 +151,19 @@
 
     <div id="image-modal" class="fixed inset-0 bg-slate-900/60 overflow-auto hidden items-center justify-center z-50">
         <div class="bg-white p-4 relative ">
-            <button id="modal-close" class="absolute right-6 top-6 p-2  hover:bg-slate-100" aria-label="Đóng">
-                ✕
-            </button>
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-200">
+                <div>
+                    <h3 id="modal-title" class="text-base font-semibold">Tên ảnh</h3>
+                    <p id="modal-path" class="text-xs text-slate-500 break-all"></p>
+                </div>
+                <div>
+                    <a id="modal-download" href="#"  class="btn-primary px-4 py-2 rounded-lg text-sm">Tải về</a>
+                    <a id="modal-close" href="#"  class="btn-outline px-4 py-2 rounded-lg text-sm">Đóng</a>
+                </div>
+            </div>
             <div class="space-y-4 ">
                 <div class="mb-4 flex justify-center">
                     <img id="modal-image" src="" alt="" class="">
-                </div>
-                <div class="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                        <h3 id="modal-title" class="text-base font-semibold">Tên ảnh</h3>
-                        <p id="modal-path" class="text-xs text-slate-500 break-all"></p>
-                    </div>
-                    <a id="modal-download" href="#" download class="inline-flex items-center gap-2 px-4 py-2 rounded-lg btn-primary text-sm">Tải ảnh</a>
                 </div>
             </div>
         </div>
@@ -185,7 +185,6 @@
         const modalImage = document.getElementById("modal-image");
         const modalTitle = document.getElementById("modal-title");
         const modalPath = document.getElementById("modal-path");
-        const modalDownload = document.getElementById("modal-download");
         const modalClose = document.getElementById("modal-close");
 
         let activeParent = null;
@@ -839,12 +838,10 @@
             document.querySelectorAll("#content button[data-src]").forEach((btn) => {
                 btn.addEventListener("click", () => {
                     const src = btn.dataset.src;
-                    const download = btn.dataset.download || src;
                     const title = btn.dataset.title;
                     modalImage.src = src;
                     modalTitle.textContent = title;
                     modalPath.textContent = decodeURI(src);
-                    modalDownload.href = download;
                     modal.classList.remove("hidden");
                     document.body.classList.add("modal-open");
                 });
