@@ -77,10 +77,10 @@
             right: 0;
         }
 
-        .nav-item:hover .mega-menu,
-        .nav-item:focus-within .mega-menu {
+        .mega-menu.is-open {
             opacity: 1;
             visibility: visible;
+            transform: translateY(0);
         }
 
         .modal-open {
@@ -191,6 +191,7 @@
         let activeNode = null;
         let currentPage = 1;
         const pageSize = 4;
+        let navOutsideListenerBound = false;
 
         const sampleData = {
             Documents: {
@@ -550,11 +551,9 @@
             const totalFiles = countFilesRecursive(node);
             labelBtn.innerHTML = `${node.label} <span class=\"text-xs text-slate-400\">(${totalFiles})</span>`;
             labelBtn.addEventListener("click", () => {
-                if (node.files && node.files.length) {
-                    setActiveNode(parentKey, node);
-                    if (onSelect) {
-                        onSelect();
-                    }
+                setActiveNode(parentKey, node);
+                if (onSelect) {
+                    onSelect();
                 }
             });
 
@@ -596,9 +595,7 @@
             const totalFiles = countFilesRecursive(node);
             button.innerHTML = `${node.label} <span class=\"mx-1 text-xs text-slate-400\">(${totalFiles})</span>`;
             button.addEventListener("click", () => {
-                if (node.files && node.files.length) {
-                    setActiveNode(parentKey, node);
-                }
+                setActiveNode(parentKey, node);
             });
 
             item.appendChild(button);
@@ -662,6 +659,12 @@
             mobileMenuContent.innerHTML = "";
             statCategories.textContent = "0";
 
+            const closeAllMega = () => {
+                document.querySelectorAll(".mega-menu.is-open").forEach((menu) => {
+                    menu.classList.remove("is-open");
+                });
+            };
+
             Object.entries(data).forEach(([parentKey, parentValue]) => {
                 const navItem = document.createElement("div");
                 navItem.className = "nav-item";
@@ -686,6 +689,16 @@
                 navItem.appendChild(mega);
                 nav.appendChild(navItem);
 
+                navBtn.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const isOpen = mega.classList.contains("is-open");
+                    closeAllMega();
+                    if (!isOpen) {
+                        mega.classList.add("is-open");
+                    }
+                });
+
                 const mobileSection = document.createElement("div");
                 mobileSection.className = "mb-4";
                 mobileSection.innerHTML = `<div class=\"font-semibold mb-2 text-slate-900 capitalize\">${parentValue.label}</div>`;
@@ -699,6 +712,11 @@
                 mobileSection.appendChild(mobileList);
                 mobileMenuContent.appendChild(mobileSection);
             });
+
+            if (!navOutsideListenerBound) {
+                document.addEventListener("click", closeAllMega);
+                navOutsideListenerBound = true;
+            }
         };
 
         const renderContent = () => {
