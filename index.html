@@ -86,6 +86,34 @@
         .modal-open {
             overflow: hidden;
         }
+        .bg-source-design {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bg-source-design img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: 0;
+        }
+
+        .bg-source-design .hero-copy {
+            position: relative;
+            z-index: 1;
+        }
+        .w-100 {
+    width: 100%;
+}
     </style>
 </head>
 
@@ -95,12 +123,12 @@
     <header class="fixed top-0 inset-x-0 z-40 bg-white/80 border-b border-slate-200/60 backdrop-blur">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <a href="index.html" class="d-block">
+                <a href="/" class="d-block">
                     <img src="logo.png" alt="Logo" class="h-10 object-contain">
                 </a>
             </div>
             <nav class="hidden lg:flex items-center gap-6" id="main-nav">
-                <!-- Nav items load từ dữ liệu -->
+                <!-- Nav items injected by JS -->
             </nav>
             <div class="flex items-center gap-2">
                 <button id="mobile-menu-btn" class="lg:hidden px-3 py-2 border border-slate-300/70 rounded-lg text-sm">Danh mục</button>
@@ -114,23 +142,26 @@
             <div class="px-6 py-4" id="mobile-menu-content"></div>
         </div>
     </header>
+    <div class="bg-source-design">
+        <div class="max-w-7xl w-100 mx-auto px-6">
+            <div class="hero-copy max-w-3xl">
+                <p class="text-xs uppercase tracking-[0.4em] text-slate-500">Source Design</p>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Thư Viện Thiết Kế Nội Bộ</h2>
+                <p class="text-sm text-slate-600 mt-3">Chọn danh mục từ thanh điều hướng, duyệt thiết kế và tải nhanh phục vụ dự án.</p>
+            </div>
+        </div>
+        <img src="bg.png" alt="">
+    </div>
 
-    <main class="max-w-7xl mx-auto px-6 pt-28 pb-12">
+    <main class="max-w-7xl mx-auto px-6 pt-28 pb-12 hidden">
         <section class="mb-10">
             <div class="max-w-3xl">
                 <p class="text-xs uppercase tracking-[0.4em] text-slate-500">Source Design</p>
                 <h2 class="text-3xl md:text-4xl font-semibold mt-2">Thư viện thiết kế nội bộ</h2>
-                <p class="text-sm text-slate-600 mt-3">Chọn danh mục từ thanh điều hướng, duyệt thiết kế và tải nhanh phục vụ dự án. Giao diện tối ưu cho dữ liệu lớn.</p>
-            </div>
-            <div class="mt-6 flex flex-wrap items-center gap-3">
-                <div class="glass-card rounded-xl px-4 py-3 flex items-center gap-3 w-full md:w-auto md:min-w-[320px]">
-                    <input id="search-input" type="text" placeholder="Tìm theo tên file..." class="w-full bg-transparent text-sm text-slate-800 placeholder-slate-400 outline-none">
-                </div>
-                <div class="text-xs text-slate-500 hidden">Đang xem: <span id="breadcrumb" class="font-medium text-slate-800"></span></div>
+                <p class="text-sm text-slate-600 mt-3">Chọn danh mục từ thanh điều hướng, duyệt thiết kế và tải nhanh phục vụ dự án.</p>
             </div>
         </section>
-
-        <section id="subcategory-info" class="mb-6 hidden">
+        <section id="subcategory-info" class="mb-6 ">
             <div class="glass-card rounded-2xl p-5">
                 <div class="flex items-start justify-between gap-4 flex-wrap">
                     <div>
@@ -145,7 +176,7 @@
         </section>
 
         <section id="content" class="space-y-6">
-            <!-- Content load từ js -->
+            <!-- Content injected by JS -->
         </section>
     </main>
 
@@ -157,7 +188,7 @@
                     <p id="modal-path" class="text-xs text-slate-500 break-all"></p>
                 </div>
                 <div>
-                    <a id="modal-download" href="#"  class="btn-primary px-4 py-2 rounded-lg text-sm">Tải về</a>
+                    <a id="modal-download" href="#" download class="btn-primary px-4 py-2 rounded-lg text-sm">Tải về</a>
                     <a id="modal-close" href="#"  class="btn-outline px-4 py-2 rounded-lg text-sm">Đóng</a>
                 </div>
             </div>
@@ -175,8 +206,8 @@
         const nav = document.getElementById("main-nav");
         const mobileMenuContent = document.getElementById("mobile-menu-content");
         const content = document.getElementById("content");
-        const breadcrumb = document.getElementById("breadcrumb");
-        const searchInput = document.getElementById("search-input");
+        const heroSection = document.querySelector(".bg-source-design");
+        const mainSection = document.querySelector("main");
         const statCategories = document.getElementById("stat-categories");
         const subcategoryInfo = document.getElementById("subcategory-info");
         const subcategoryTitle = document.getElementById("subcategory-title");
@@ -583,6 +614,12 @@
             activeNode = node;
             currentPage = 1;
             subcategoryInfo.classList.remove("hidden");
+            if (heroSection) {
+                heroSection.classList.add("hidden");
+            }
+            if (mainSection) {
+                mainSection.classList.remove("hidden");
+            }
             renderContent();
         };
 
@@ -769,6 +806,12 @@
 
         const renderContent = () => {
             if (!activeParent || !activeNode) {
+                if (heroSection) {
+                    heroSection.classList.remove("hidden");
+                }
+                if (mainSection) {
+                    mainSection.classList.add("hidden");
+                }
                 content.innerHTML = "";
                 subcategoryInfo.classList.add("hidden");
                 statCategories.textContent = "0";
@@ -783,8 +826,6 @@
             const relativePath = activeNode.path.startsWith(`${activeParent}/`)
                 ? activeNode.path.slice(activeParent.length + 1)
                 : activeNode.path;
-            const pathText = relativePath ? `${parent.label} / ${relativePath}` : parent.label;
-            breadcrumb.textContent = pathText;
             subcategoryTitle.textContent = relativePath || activeNode.label;
             subcategoryDesc.textContent = activeNode.files.length
                 ? "Chọn ảnh để xem chi tiết hoặc tải về."
@@ -801,10 +842,7 @@
                 return;
             }
 
-            const keyword = searchInput.value.trim().toLowerCase();
-            const filteredFiles = keyword
-                ? activeNode.files.filter((file) => file.toLowerCase().includes(keyword))
-                : activeNode.files;
+            const filteredFiles = activeNode.files;
             statCategories.textContent = String(filteredFiles.length);
 
             const grid = document.createElement("div");
@@ -928,11 +966,6 @@
 
         document.getElementById("mobile-menu-btn").addEventListener("click", () => {
             document.getElementById("mobile-menu").classList.toggle("hidden");
-        });
-
-        searchInput.addEventListener("input", () => {
-            currentPage = 1;
-            renderContent();
         });
 
         const initData = () => {
