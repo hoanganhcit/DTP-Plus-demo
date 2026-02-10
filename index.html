@@ -112,8 +112,11 @@
             z-index: 1;
         }
         .w-100 {
-    width: 100%;
-}
+            width: 100%;
+        }
+        .align-items-center {
+            align-items: center;
+        }
     </style>
 </head>
 
@@ -181,18 +184,20 @@
     </main>
 
     <div id="image-modal" class="fixed inset-0 bg-slate-900/60 overflow-auto hidden items-center justify-center z-50">
-        <div class="bg-white p-4 relative ">
-            <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-200">
+        <div class="bg-white relative ">
+            <div class="grid grid-cols-3 gap-3 p-4 mb-4 align-items-center border-b border-slate-200 bg-white sticky top-0">
                 <div>
                     <h3 id="modal-title" class="text-base font-semibold">Tên ảnh</h3>
                     <p id="modal-path" class="text-xs text-slate-500 break-all"></p>
                 </div>
-                <div>
-                    <a id="modal-download" href="#" download class="btn-primary px-4 py-2 rounded-lg text-sm">Tải về</a>
+                <div style="text-align: center;">
+                    <a id="modal-download" href="#" download class="btn-primary px-5 rounded text-lg py-3 text-sm">Download <i class="fal fa-folder-download ml-2"></i></a>
+                </div>
+                <div style="text-align: right;">
                     <a id="modal-close" href="#"  class="btn-outline px-4 py-2 rounded-lg text-sm">Đóng</a>
                 </div>
             </div>
-            <div class="space-y-4 ">
+            <div class="space-y-4 p-4">
                 <div class="mb-4 flex justify-center">
                     <img id="modal-image" src="" alt="" class="">
                 </div>
