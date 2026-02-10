@@ -221,6 +221,7 @@
         const modalImage = document.getElementById("modal-image");
         const modalTitle = document.getElementById("modal-title");
         const modalPath = document.getElementById("modal-path");
+        const modalDownload = document.getElementById("modal-download");
         const modalClose = document.getElementById("modal-close");
 
         let activeParent = null;
@@ -948,9 +949,12 @@
                 btn.addEventListener("click", () => {
                     const src = btn.dataset.src;
                     const title = btn.dataset.title;
+                    const download = btn.dataset.download;
                     modalImage.src = src;
                     modalTitle.textContent = title;
                     modalPath.textContent = decodeURI(src);
+                    modalDownload.href = download;
+                    modalDownload.setAttribute("download", "");
                     modal.classList.remove("hidden");
                     document.body.classList.add("modal-open");
                 });
